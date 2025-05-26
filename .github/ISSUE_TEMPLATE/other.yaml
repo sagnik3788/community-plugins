@@ -1,0 +1,16 @@
+name: Other issue
+description: Suggest an improvement or problem
+# labels: ["needs triage"]
+body:
+  - type: textarea
+    attributes:
+      label: What do you want?
+      description: Describe the improvement or problem you'd like to suggest
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Tell us the purpose.
+      description: Without the improvement, what's wrong?
+    validations:
+      required: true
