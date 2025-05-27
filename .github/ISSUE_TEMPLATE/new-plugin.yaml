@@ -1,0 +1,38 @@
+name: New plugin proposal
+description: Suggest a new plugin
+title: "[New plugin] {{Short title of the plugin}}"
+labels: ["new-plugin"]
+body:
+  # - type: textarea
+  #   attributes:
+  #     label: Type of the plugin (Deployment/Stages)
+  #   validations:
+  #     required: true
+  - type: textarea
+    attributes:
+      label: A short description of the plugin
+      description: Which platform / service / operation to be deployed,
+        which tool / library / SDK (e.g. AWS SDK) to use mainly,
+        or what kind of stages.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: The purpose and use-cases of the new plugin
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: GitHub ID of Code Owner(s)
+      description:
+        A code owner is responsible for maintaining the plugin, including triaging issues, reviewing PRs, and submitting bug fixes.
+        Having a code owner is strongly recommended, but you can try to find a code owner through this issue.
+  - type: input
+    attributes:
+      label: Directory Name
+      description:
+        The directory name to create the plugin. After this issue is approved, you can create a PR for the plugin with the directory name.
+        If not specified or the name is ambiguous/duplicated, a maintainer will suggest a new name.
+  - type: textarea
+    attributes:
+      label: Additional information

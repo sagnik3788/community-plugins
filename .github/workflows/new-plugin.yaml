@@ -1,0 +1,41 @@
+name: New Plugin
+
+on:
+  workflow_dispatch:
+    inputs:
+      PLUGIN_DIR_NAME:
+        description: 'Plugin directory name (e.g. example-stage)'
+        required: true
+        type: string
+      CODEOWNERS:
+        description: 'Code owner(s) (e.g. @user1 @user2)'
+        required: true
+        type: string
+
+jobs:
+  init-plugin:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up dependencies
+        run: sudo apt-get update && sudo apt-get install -y make
+
+      - name: Run make init-plugin
+        run: |
+          make init-plugin PLUGIN_DIR_NAME="${{ github.event.inputs.PLUGIN_DIR_NAME }}" CODEOWNERS="${{ github.event.inputs.CODEOWNERS }}"
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: init-plugin/${{ github.event.inputs.PLUGIN_DIR_NAME }}
+          title: "[bot] new plugin: ${{ github.event.inputs.PLUGIN_DIR_NAME }}"
+          commit-message: "[bot] new plugin: ${{ github.event.inputs.PLUGIN_DIR_NAME }}"
+          body: |
+            This PR was automatically created by the "New Plugin" workflow.
+            - Plugin: `${{ github.event.inputs.PLUGIN_DIR_NAME }}`
+            - Codeowners: `${{ github.event.inputs.CODEOWNERS }}`
+          token: ${{ secrets.GITHUB_TOKEN }}
+          signoff: true
+          delete-branch: true
