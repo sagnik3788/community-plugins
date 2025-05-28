@@ -39,7 +39,13 @@ body:
   - type: input
     attributes:
       label: Plugin version
-      description: What version did you use?
+      description: What pluginversion did you use?
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Piped version
+      description: What piped version did you use?
     validations:
       required: true
   - type: textarea
@@ -48,6 +54,7 @@ body:
       description: Please provide any additional information about your environment.
       value: |
         ## Piped Environment
+        PipeCD Control Plane version: (e.g., "v0.52.0")
         OS: (e.g., "Ubuntu 24.04")
 
   - type: textarea
