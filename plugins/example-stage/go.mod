@@ -1,4 +1,4 @@
-module pipe-cd/community-plugins/example-stage
+module pipe-cd/community-plugins/plugins/example-stage
 
 go 1.24.2
 
