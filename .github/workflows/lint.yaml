@@ -27,6 +27,7 @@ jobs:
 
   go:
     runs-on: ubuntu-24.04
+    needs: list-go-modules
     strategy:
       fail-fast: false
       matrix:
