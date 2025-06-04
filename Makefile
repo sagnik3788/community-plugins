@@ -25,12 +25,12 @@ lint/go:
 		docker run ${FLAGS} -w /repo/$$module golangci/golangci-lint@${VERSION} golangci-lint run -v --config /repo/.golangci.yml --fix=$(FIX); \
 	done
 
-.PHONY: build/plugins
-build/plugins: PLUGINS_BIN_DIR ?= ~/.piped/plugins
-build/plugins: PLUGINS_SRC_DIR ?= ./plugins
-build/plugins: PLUGINS_OUT_DIR ?= ${PWD}/.artifacts/plugins
-build/plugins: PLUGINS ?= $(shell find $(PLUGINS_SRC_DIR) -mindepth 1 -maxdepth 1 -type d | while read -r dir; do basename "$$dir"; done | paste -sd, -) # comma separated list of plugins. eg: PLUGINS=kubernetes,ecs,lambda
-build/plugins:
+.PHONY: build/go
+build/go: PLUGINS_BIN_DIR ?= ~/.piped/plugins
+build/go: PLUGINS_SRC_DIR ?= ./plugins
+build/go: PLUGINS_OUT_DIR ?= ${PWD}/.artifacts/plugins
+build/go: PLUGINS ?= $(shell find $(PLUGINS_SRC_DIR) -mindepth 1 -maxdepth 1 -type d | while read -r dir; do basename "$$dir"; done | paste -sd, -) # comma separated list of plugins. eg: PLUGINS=kubernetes,ecs,lambda
+build/go:
 	mkdir -p $(PLUGINS_BIN_DIR)
 	@echo "Building plugins..."
 	@for plugin in $(shell echo $(PLUGINS) | tr ',' ' '); do \
@@ -43,6 +43,7 @@ build/plugins:
 			&& cp $(PLUGINS_OUT_DIR)/$$plugin $(PLUGINS_BIN_DIR)/$$plugin; \
 		if [ $$? -ne 0 ]; then \
 			echo "❌ Failed to build plugin: $$plugin"; \
+			exit 1; \
 		fi; \
 	done
 	@echo "✅ Plugins are built to $(PLUGINS_OUT_DIR) and copied to $(PLUGINS_BIN_DIR)"
