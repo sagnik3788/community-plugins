@@ -11,7 +11,7 @@ sync/codeowners:
 
 .PHONY: init/plugin
 init/plugin:
-	sh hack/init-plugin.sh $(PLUGIN_DIR) $(CODEOWNERS)
+	sh hack/init-plugin.sh $(PLUGIN_DIR_NAME) $(CODEOWNERS)
 
 .PHONY: lint/go
 lint/go: FIX ?= false
