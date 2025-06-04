@@ -1,4 +1,3 @@
-
 .PHONY: gen/sync-plugins-list
 gen/sync-plugins-list:
 	sh hack/sync-plugins-list.sh
@@ -11,7 +10,6 @@ gen/sync-codeowners:
 init-plugin:
 	sh hack/init-plugin.sh $(PLUGIN_DIR_NAME) $(CODEOWNERS)
 
-# Imported from pipe-cd/pipecd 
 .PHONY: lint/go
 lint/go: FIX ?= false
 lint/go: VERSION ?= sha256:c2f5e6aaa7f89e7ab49f6bd45d8ce4ee5a030b132a5fbcac68b7959914a5a890 # golangci/golangci-lint:v1.64.7
@@ -24,7 +22,6 @@ lint/go:
 		docker run ${FLAGS} -w /repo/$$module golangci/golangci-lint@${VERSION} golangci-lint run -v --config /repo/.golangci.yml --fix=$(FIX); \
 	done
 
-# Imported from pipe-cd/pipecd 
 .PHONY: build/plugins
 build/plugins: PLUGINS_BIN_DIR ?= ~/.piped/plugins
 build/plugins: PLUGINS_SRC_DIR ?= ./plugins
@@ -35,10 +32,10 @@ build/plugins:
 	@echo "Building plugins..."
 	@for plugin in $(shell echo $(PLUGINS) | tr ',' ' '); do \
 		if [ ! -f $(PLUGINS_SRC_DIR)/$$plugin/go.mod ]; then \
-			echo "Skipped plugin: $$plugin (no go.mod found)"; \
+			echo "⏭️Skipped plugin: $$plugin (no go.mod found)"; \
 			continue; \
 		fi; \
-		echo "Building plugin: $$plugin"; \
+		echo "🔨 Building plugin: $$plugin"; \
 		CGO_ENABLED=0 go -C $(PLUGINS_SRC_DIR)/$$plugin build -o $(PLUGINS_OUT_DIR)/$$plugin . \
 			&& cp $(PLUGINS_OUT_DIR)/$$plugin $(PLUGINS_BIN_DIR)/$$plugin; \
 		if [ $$? -ne 0 ]; then \
@@ -47,6 +44,23 @@ build/plugins:
 	done
 	@echo "✅ Plugins are built to $(PLUGINS_OUT_DIR) and copied to $(PLUGINS_BIN_DIR)"
 
+# test/go can be overridden by each plugin.
+.PHONY: test/go
+# test/go: COVERAGE ?= false
+# test/go: COVERAGE_OUTPUT ?= ${PWD}/coverage.out
+# test/go: COVERAGE_OPTS ?= -covermode=atomic -coverprofile=${COVERAGE_OUTPUT}.tmp
+test/go: PLUGINS ?= $(shell find ./plugins -name go.mod | while read -r dir; do basename $$(dirname "$$dir"); done | paste -sd, -) # comma separated list of plugins. e.g.: PLUGINS=example-stage,yyy
+test/go:
+# TODO: Use the COVERAGE flag and report in CI.
+	@echo "PLUGINS: $(PLUGINS)"
+	@echo "Testing plugins..."
+	@for plugin in $(shell echo $(PLUGINS) | tr ',' ' '); do \
+		echo "🧪 Testing plugin: $$plugin"; \
+		make common/test/go -C ./plugins/$$plugin; \
+		if [ $$? -ne 0 ]; then \
+			echo "❌ Failed to test plugin: $$plugin"; \
+		fi; \
+	done
 
 # .PHONY: push/plugins
 

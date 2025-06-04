@@ -1,0 +1,3 @@
+.PHONY: common/test/go
+common/test/go:
+	go test -failfast -race
