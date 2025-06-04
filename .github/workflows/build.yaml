@@ -23,5 +23,5 @@ jobs:
         with:
           go-version: ${{ env.GO_VERSION }}
           cache: true
-      - name: Build go plugins
+      - name: Build go plugins # TODO: Make it parallel
         run: make build/go
