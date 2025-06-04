@@ -11,7 +11,9 @@ fi
 # 1. Initialize the plugin directory.
 PLUGIN_DIR=plugins/$PLUGIN_NAME
 mkdir $PLUGIN_DIR
-cp hack/init-plugin-readme.md $PLUGIN_DIR/README.md
+
+# 1-1. README
+cp hack/init-template/README.md $PLUGIN_DIR/README.md
 # Replace the issues link
 sed -i '' "s|{{ISSUES_PLUGIN_NAME}}|${PLUGIN_NAME}|g" $PLUGIN_DIR/README.md
 # Replace the codeowners link
@@ -21,8 +23,13 @@ for codeowner in $CODEOWNERS; do
 done
 sed -i '' "s|@{ACCOUNT}|$codeowner_links|" $PLUGIN_DIR/README.md
 
-# 2. Update Issue templates
-make gen/sync-plugins-list
+## 1-2. Makefile
+cp hack/init-template/Makefile $PLUGIN_DIR/Makefile
 
-# 3. Update CODEOWNERS (Insert a new line)
-make gen/sync-codeowners
+# 1-3. go.mod
+pushd $PLUGIN_DIR
+go mod init github.com/pipe-cd/community-plugins/$PLUGIN_DIR
+popd
+
+# 2. Update Issue templates, CODEOWNERS
+make sync

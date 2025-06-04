@@ -1,14 +1,17 @@
-.PHONY: gen/sync-plugins-list
-gen/sync-plugins-list:
+.PHONY: sync
+sync: sync/plugins-list sync/codeowners
+
+.PHONY: sync/plugins-list
+sync/plugins-list:
 	sh hack/sync-plugins-list.sh
 
-.PHONY: gen/sync-codeowners
-gen/sync-codeowners:
+.PHONY: sync/codeowners
+sync/codeowners:
 	sh hack/sync-codeowners.sh
 
-.PHONY: init-plugin
-init-plugin:
-	sh hack/init-plugin.sh $(PLUGIN_DIR_NAME) $(CODEOWNERS)
+.PHONY: init/plugin
+init/plugin:
+	sh hack/init-plugin.sh $(PLUGIN_DIR) $(CODEOWNERS)
 
 .PHONY: lint/go
 lint/go: FIX ?= false
@@ -32,7 +35,7 @@ build/plugins:
 	@echo "Building plugins..."
 	@for plugin in $(shell echo $(PLUGINS) | tr ',' ' '); do \
 		if [ ! -f $(PLUGINS_SRC_DIR)/$$plugin/go.mod ]; then \
-			echo "⏭️Skipped plugin: $$plugin (no go.mod found)"; \
+			echo "⏭️ Skipped plugin: $$plugin (no go.mod found)"; \
 			continue; \
 		fi; \
 		echo "🔨 Building plugin: $$plugin"; \
@@ -62,6 +65,8 @@ test/go:
 		fi; \
 	done
 
+# TODO
 # .PHONY: push/plugins
 
+# TODO
 # .PHONY: precommit
