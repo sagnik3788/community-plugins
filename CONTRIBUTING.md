@@ -16,7 +16,7 @@ There are two ways to become a code owner:
 - When [initializing a new plugin](#adding-a-new-plugin)
 - When the current code owner(s) invites a new one. Then, follow these steps:
     1. Update the Code Owners in the README.md of the plugin.
-    2. Execute `make gen/sync-codeowners` to update the CODEOWNERS file.
+    2. Execute `make sync/codeowners` to update the CODEOWNERS file.
     3. Create a PR and get it merged.
 
 _What to do when a code owner became inactive?: TBD_
