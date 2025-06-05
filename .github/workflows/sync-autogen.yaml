@@ -20,6 +20,9 @@ jobs:
       - name: git status # for logging
         shell: bash
         run: git status
+      - name: git diff # for logging
+        shell: bash
+        run: git diff
       - name: Validate
         shell: bash
         run: test -z "$(git status --porcelain)"
