@@ -1,7 +1,7 @@
 #!/bin/bash
 # This script updates the plugins list in the issue templates.
 
-plugins=$(ls plugins | sed 's/\// /g')
+plugins=$(ls plugins | gsed 's/\// /g')
 issue_templates=".github/ISSUE_TEMPLATE/bug-report.yaml .github/ISSUE_TEMPLATE/enhancement.yaml"
 
 # 1. Issue Templates
@@ -12,11 +12,9 @@ for plugin in $plugins; do
 done
 
 for f in $issue_templates; do
-    sed -i.bak "/# --- Start plugins list ---/,/# --- End plugins list ---/c\\
+    gsed -i "/# --- Start plugins list ---/,/# --- End plugins list ---/c\\
         # --- Start plugins list ---\\
-$plugins_list\\        # --- End plugins list ---\\
-" "$f"
-    rm "$f.bak"
+$plugins_list\\        # --- End plugins list ---" "$f"
 done
 
 # 2. labeler
@@ -29,8 +27,6 @@ plugin/$plugin:\\
       - any-glob-to-any-file: "plugins/$plugin/**"\\
 "
 done
-sed -i.bak "/# --- Start plugins list ---/,/# --- End plugins list ---/c\\
+gsed -i "/# --- Start plugins list ---/,/# --- End plugins list ---/c\\
 # --- Start plugins list ---\\
-$plugin_labels\\# --- End plugins list ---\\
-" "$labeler_config_file"
-rm "$labeler_config_file.bak"
+$plugin_labels\\# --- End plugins list ---" "$labeler_config_file"

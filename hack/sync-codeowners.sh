@@ -4,11 +4,11 @@
 COMMON_APPROVERS="@pipe-cd/pipecd-approvers"
 
 # 1. List plugins
-plugins=$(ls plugins | sed 's/\// /g')
+plugins=$(ls plugins | gsed 's/\// /g')
 codeowners=""
 
 for plugin in $plugins; do
-    accounts=$(grep '\[Code Owners\]' plugins/$plugin/README.md | grep -o '@[^ )]*]' | sed 's|]||'  | tr '\n' ' ')
+    accounts=$(grep '\[Code Owners\]' plugins/$plugin/README.md | grep -o '@[^ )]*]' | gsed 's|]||'  | tr '\n' ' ')
     codeowners="${codeowners}plugins/$plugin/ $COMMON_APPROVERS $accounts\\
 "
 done
@@ -16,8 +16,6 @@ done
 echo "$codeowners"
 
 # 2. Update CODEOWNERS
-sed -i.bak "/# --- Start plugins ---/,/# --- End plugins ---/c\\
+gsed -i "/# --- Start plugins ---/,/# --- End plugins ---/c\\
 # --- Start plugins ---\\
-$codeowners\\# --- End plugins ---\\
-" CODEOWNERS
-rm CODEOWNERS.bak
+$codeowners\\# --- End plugins ---" CODEOWNERS

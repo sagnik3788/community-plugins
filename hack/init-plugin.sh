@@ -15,14 +15,14 @@ mkdir $PLUGIN_DIR
 # 1-1. README
 cp hack/init-template/README.md $PLUGIN_DIR/README.md
 # Replace the issues link
-sed -i.bak "s|{{ISSUES_PLUGIN_NAME}}|${PLUGIN_NAME}|g" $PLUGIN_DIR/README.md
+gsed -i "s|{{ISSUES_PLUGIN_NAME}}|${PLUGIN_NAME}|g" $PLUGIN_DIR/README.md
 # Replace the codeowners link
 codeowner_links=""
 for codeowner in $CODEOWNERS; do
     codeowner_links="$codeowner_links [@$codeowner](https://github.com/$codeowner) "
 done
-sed -i.bak "s|@{ACCOUNT}|$codeowner_links|" $PLUGIN_DIR/README.md
-rm $PLUGIN_DIR/README.md.bak
+gsed -i "s|@{ACCOUNT}|$codeowner_links|" $PLUGIN_DIR/README.md
+
 ## 1-2. Makefile
 cp hack/init-template/Makefile $PLUGIN_DIR/Makefile
 
