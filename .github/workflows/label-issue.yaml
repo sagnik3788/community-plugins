@@ -1,0 +1,27 @@
+# This workflow puts plugin labels to a new Issue based on the plugins dropdown.
+# e.g. If 'xxx' plugin and 'general' are selected, then 'plugin/xxx' and 'general' labels will be added.
+name: label-issue
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  assign:
+    permissions:
+      contents: read
+      issues: write
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Add plugin labels
+        run: |
+          plugins_section=$(echo "${{ github.event.issue.body }}" | awk '/### Plugin\(s\)/{flag=1; next} /^### /{flag=0} flag')
+          labels=$(echo "$plugins_section" | grep -v '^ *$' | tr ',' '\n' | sed 's/^ *//;s/ *$//' | awk 'NF {if($0=="general"){print $0}else{print "plugin/"$0}}' | paste -sd, -)
+          if [ -n "$labels" ] && [ "$labels" != "plugin/_No response_" ]; then
+            gh issue edit ${{ github.event.issue.number }} --add-label "$labels"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

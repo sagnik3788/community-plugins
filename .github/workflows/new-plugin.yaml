@@ -13,8 +13,21 @@ on:
         type: string
 
 jobs:
+  # To prevent errors in label-issue and labeler.
+  create-label:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Create label
+        run: |
+          gh label create "plugin/${{ github.event.inputs.PLUGIN_DIR_NAME }}" --color "a7cfd4" --force
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   init-plugin:
     runs-on: ubuntu-latest
+    needs: create-label
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
