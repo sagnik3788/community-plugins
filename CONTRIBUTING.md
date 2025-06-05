@@ -16,19 +16,40 @@ There are two ways to become a code owner:
 - When [initializing a new plugin](#adding-a-new-plugin)
 - When the current code owner(s) invites a new one. Then, follow these steps:
     1. Update the Code Owners in the README.md of the plugin.
-    2. Execute `make sync/codeowners` to update the CODEOWNERS file.
+    2. Execute `make sync/sync` to update the CODEOWNERS file.
     3. Create a PR and get it merged.
 
-_What to do when a code owner became inactive?: TBD_
+_What to do when a code owner becomes inactive?: TBD_
 
 ## Issues
 
-- Opening a new issue
-- Finding 
-- Discuss
-- Good first issues: TBD
+### Opening a new Issue
+
+When opening a new issue, please make sure:
+- to fill out the issue template for efficient communication.
+- to search existing issues to avoid duplicates.
+
+#### Security issues
+
+**DO NOT open an Issue** for security problems. Instead, see [SECURITY.md in pipe-cd/pipecd](https://github.com/pipe-cd/pipecd/blob/master/SECURITY.md) and please send an email.
+
+### Working on Issues
+
+1. Before working on an issue, please leave a comment saying "I'd like to work on this." and we will assign the issue to you.
+   - When you are assigned to an issue but seem inactive for some weeks, we would unassign you.
+2. Before submitting a Pull Request, we expect you to investigate the issue and comment what to do. Then you can discuss how to solve the issue and reduce the communication on the Pull Request.
 
 ## Pull Request
+
+### Submitting a PR
+
+When submitting a pull request, please ensure the following:
+
+- **Issue assignment**: To avoid redundant work, make sure you are assigned to the issue.
+- **Small PR**: Smaller PRs are much easier to review and are more likely to be merged.
+- **DCO**: If you haven't signed off yet, see [License on contribution](#license-on-contribution).
+- **`make precommit`**: To ensure your change will pass the CI.
+- **Only main branch**: All PRs should be opened against the main branch.
 
 ### Reviewing
 
@@ -41,10 +62,22 @@ _What to do when a code owner became inactive?: TBD_
 
 TBD
 
+See [example-stage plugin](examples/example-stage).
+
 We're preparing a guide of the SDK/API.
 
-See [example-stage plugin](examples/example-stage) for the example.
 
 ## Release Procedure
 
 TBD
+
+Each plugin will probably have their own version.
+
+## License on contribution
+
+For any code contribution, please carefully read the following documents:
+
+- [LICENSE](/LICENSE)
+- [Developer Certificate of Origin (DCO)](https://developercertificate.org/)
+
+And signing off your commit with [`git commit -s`](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/managing-repository-settings/managing-the-commit-signoff-policy-for-your-repository#about-commit-signoffs)

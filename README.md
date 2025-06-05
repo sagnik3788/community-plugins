@@ -13,6 +13,16 @@
 
 See ['Community and Development' of pipe-cd/pipecd](https://github.com/pipe-cd/pipecd?tab=readme-ov-file#community-and-development).
 
+## Usage
+
+### Usage of piped and plugins
+
+See https://github.com/pipe-cd/pipecd/blob/master/cmd/pipedv1/README-usage-alpha.md for now.
+
+### Details of each plugin
+
+Detailed usages of each plugin are available in each `plugins/<plugin-name>/README.md`.
+
 ## Stability Levels
 
 _This will be changed in the future since we are still defining the process._
@@ -65,11 +75,3 @@ TBD
 
 TBD
 
-
-## Example Usage
-
-TBD
-
-## Docs of each plugin
-
-Detailed usage of each plugin is available in each README.md under `plugins/<plugin-name>`.

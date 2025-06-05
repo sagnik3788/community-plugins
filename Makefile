@@ -69,5 +69,6 @@ test/go:
 # TODO
 # .PHONY: push/plugins
 
-# TODO
-# .PHONY: precommit
+.PHONY: precommit
+precommit: lint/go build/go test/go sync
+	sh hack/ensure-dco.sh
