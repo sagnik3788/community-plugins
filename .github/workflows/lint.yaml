@@ -11,7 +11,7 @@ on:
 
 env:
   GO_VERSION: 1.24.3
-  GOLANGCI_LINT_VERSION: v1.64.7 # TODO: use v2
+  GOLANGCI_LINT_VERSION: v2.1.6 # TODO: use v2
 
 jobs:
   list-go-modules:
