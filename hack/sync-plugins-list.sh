@@ -12,10 +12,11 @@ for plugin in $plugins; do
 done
 
 for f in $issue_templates; do
-    sed -i '' "/# --- Start plugins list ---/,/# --- End plugins list ---/c\\
+    sed -i.bak "/# --- Start plugins list ---/,/# --- End plugins list ---/c\\
         # --- Start plugins list ---\\
 $plugins_list\\        # --- End plugins list ---\\
 " "$f"
+    rm "$f.bak"
 done
 
 # 2. labeler
@@ -28,7 +29,8 @@ plugin/$plugin: \\
       - any-glob-to-any-file: "plugins/$plugin/**"\\
 "
 done
-sed -i '' "/# --- Start plugins list ---/,/# --- End plugins list ---/c\\
+sed -i.bak "/# --- Start plugins list ---/,/# --- End plugins list ---/c\\
 # --- Start plugins list ---\\
 $plugin_labels\\# --- End plugins list ---\\
 " "$labeler_config_file"
+rm "$labeler_config_file.bak"
