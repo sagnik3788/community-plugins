@@ -1,15 +1,16 @@
-# Plugin Name <!-- Replace the name -->
+# example-stage plugin
 
 | Metadata        |           |
 | ------------- |-----------|
 |[Stability](/README.md#stability-levels)     | In Development   |
 | Issues        | [![Open issues](https://img.shields.io/github/issues-search/pipe-cd/community-plugins?query=is%3Aissue%20is%3Aopen%20label%3Aplugin%2Fexample-stage%20&label=open&color=orange)](https://github.com/pipe-cd/community-plugins/issues?q=is%3Aopen+is%3Aissue+label%3Aplugin%2Fexample-stage) |
-| [Code Owners](/CONTRIBUTING.md#becoming-a-code-owner)   |  [@t-kikuc](https://github.com/t-kikuc)  |
+| [Code Owners](/CONTRIBUTING.md#becoming-a-code-owner)   |  [@pipe-cd/pipecd-approvers](https://github.com/orgs/pipe-cd/teams/pipecd-approvers)  |
 
 ## Supported Features
+
+- PipelineSync
 <!-- 
 - QuickSync
-- PipelineSync
 - Prune
 - LiveState View
 - DriftDetection
