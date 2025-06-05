@@ -19,35 +19,39 @@
 
 <!-- You can add additional rows like 'PipelineSync by Istio', 'Analysis by <some-o11y-provider>', etc. -->
 
-<!-- For a stages plugin, only PipelineSync would be supported in most cases. -->
+<!-- For stage plugins, only PipelineSync would be supported in most cases. -->
 
 ## Overview
 
-This plugin is an example plugin of stages. Each stage just shows a message on UI.
+This plugin is an example plugin of stages. Each stage just shows a message on the Deployment UI.
 
 ## Stages
 
-- **EXAMPLE_HELLO**: shows a message on UI
-    ```
-    Hello <name> from the example PLAN stage!
-    CommonMessage: <commonMessage>
-    ```
+### EXAMPLE_HELLO
 
-- **EXAMPLE_GOODBYE**: shows a message on UI
-    ```
-    Goodbye from example GOODBYE stage!
-    Message: <message>
-    CommonMessage: <commonMessage>
-    ```
+It shows a message on the UI.
+```
+Hello <name> from the example PLAN stage!
+CommonMessage: <commonMessage>
+```
+
+### EXAMPLE_GOODBYE
+
+It shows a message on the UI.
+```
+Goodbye from example GOODBYE stage!
+Message: <message>
+CommonMessage: <commonMessage>
+```
 
 
 ## Plugin Configuration
 
 ### Plugin scope config
 
-| Field | Type | Description | Required |
-|-|-|-|-|
-| commonMessage | string | The common message to be shown in all stages. | No |
+| Field | Type | Description | Required | Default |
+|-|-|-|-|-|
+| commonMessage | string | The common message to be shown in all stages. | No | "" |
 
 <!-- ### Deploy Target config -->
 
@@ -57,14 +61,14 @@ This plugin is an example plugin of stages. Each stage just shows a message on U
 
 ### Stage options
 
-EXAMPLE_HELLO Stage:
+#### EXAMPLE_HELLO Stage
 
-| Field | Type | Description | Required |
-|-|-|-|-|
-| name | string | The name to be shown in the stage. | Yes |
+| Field | Type | Description | Required | Default |
+|-|-|-|-|-|
+| name | string | The name to be shown in the stage. | Yes | "" |
 
-EXAMPLE_GOODBYE Stage:
+#### EXAMPLE_GOODBYE Stage
 
-| Field | Type | Description | Required |
-|-|-|-|-|
-| message | string | The message to be shown in the stage. | No |
+| Field | Type | Description | Required | Default |
+|-|-|-|-|-|
+| message | string | The message to be shown in the stage. | No | "" |

@@ -53,10 +53,10 @@ spec:
             ...
 ``` 
 
-| Field | Type | Description | Required |
-|-|-|-|-|
-| aaa | string | ... | Yes |
-| bbb | map[string]string | ... | No |
+| Field | Type | Description | Required | Default |
+|-|-|-|-|-|
+| aaa | string | ... | Yes |  |
+| bbb | map[string]string | ... | No |  |
 
 -->
 
@@ -82,10 +82,10 @@ spec:
             config: ...
 ``` 
 
-| Field | Type | Description | Required |
-|-|-|-|-|
-| ppp | string | ... | Yes |
-| qqq | map[string]string | ... | No |
+| Field | Type | Description | Required | Default |
+|-|-|-|-|-|
+| ppp | string | ... | Yes | |
+| qqq | map[string]string | ... | No | |
 
 -->
 
@@ -127,24 +127,24 @@ spec:
 
 #### XXX stage
 
-| Field | Type | Description | Required |
-|-|-|-|-|
+| Field | Type | Description | Required | Default |
+|-|-|-|-|-|
 | name | string | The name to be shown in the stage. | Yes |
-| labels | map[string]string | ... | No |
-| some | [yourtype](#yourtype) | ... | No |
+| labels | map[string]string | ... | No | | 
+| some | [yourtype](#yourtype) | ... | No | |
 
 ##### yourtype
 
-| Field | Type | Description | Required |
-|-|-|-|-|
-| aaa | bool | ... | No |
-| bbb | int | ... | No |
+| Field | Type | Description | Required | Default |
+|-|-|-|-|-|
+| aaa | bool | ... | No | false |
+| bbb | int | ... | No | 0 | 
 
 #### YYY stage
 
-| Field | Type | Description | Required |
-|-|-|-|-|
-| messages | []string | The messages to be shown in the stage. | No |
+| Field | Type | Description | Required | Default |
+|-|-|-|-|-|
+| messages | []string | The messages to be shown in the stage. | No | [""] |
 
 -->
 
