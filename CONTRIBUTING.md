@@ -1,5 +1,9 @@
 # CONTRIBUTING.md
 
+## Code of Conduct
+
+PipeCD follows [the CNCF Code of Conduct](https://github.com/cncf/foundation/blob/main/code-of-conduct.md). Please read it to understand which actions are acceptable and which are not.
+
 ## Adding a New Plugin
 
 Please follow the steps below. **You MUST NOT initialize a new plugin by opening a PR directly to avoid confusion.**
