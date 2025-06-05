@@ -18,5 +18,6 @@ echo "$codeowners"
 # 2. Update CODEOWNERS
 sed -i.bak "/# --- Start plugins ---/,/# --- End plugins ---/c\\
 # --- Start plugins ---\\
-$codeowners\\# --- End plugins ---" CODEOWNERS
+$codeowners\\# --- End plugins ---\\
+" CODEOWNERS
 rm CODEOWNERS.bak

@@ -24,8 +24,8 @@ labeler_config_file=".github/labeler.yaml"
 plugin_labels=""
 for plugin in $plugins; do
     plugin_labels="${plugin_labels}\\
-plugin/$plugin: \\
-  - changed-files: \\
+plugin/$plugin:\\
+  - changed-files:\\
       - any-glob-to-any-file: "plugins/$plugin/**"\\
 "
 done

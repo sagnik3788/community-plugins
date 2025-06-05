@@ -19,6 +19,7 @@ body:
         # --- Start plugins list ---
         - example-stage
         # --- End plugins list ---
+
   - type: textarea
     attributes:
       label: What happened?
