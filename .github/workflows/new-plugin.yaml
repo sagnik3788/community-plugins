@@ -11,6 +11,10 @@ on:
         description: 'Code owner(s) (e.g. @user1 @user2)'
         required: true
         type: string
+      ISSUE_NUMBER:
+        description: 'Issue number of the proposal (e.g. 123)'
+        required: true
+        type: number
 
 jobs:
   # To prevent errors in label-issue and labeler.
@@ -55,6 +59,9 @@ jobs:
             This PR was automatically created by the "New Plugin" workflow.
             - Plugin: `${{ github.event.inputs.PLUGIN_DIR_NAME }}`
             - Codeowners: `${{ github.event.inputs.CODEOWNERS }}`
+            
+            related to: #${{ github.event.inputs.ISSUE_NUMBER }}
+
             See [CONTRIBUTING.md](https://github.com/pipe-cd/community-plugins/blob/main/CONTRIBUTING.md#adding-a-new-plugin) for details.
           token: ${{ secrets.GITHUB_TOKEN }}
           signoff: true
