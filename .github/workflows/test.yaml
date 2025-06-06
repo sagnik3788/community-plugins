@@ -15,24 +15,24 @@ env:
   GO_VERSION: 1.24.3
 
 jobs:
-  list-go-modules:
+  list-plugins:
     runs-on: ubuntu-24.04
     outputs:
-      modules: ${{ steps.list-go-modules.outputs.modules }}
+      plugins: ${{ steps.list-plugins.outputs.plugins }}
     steps:
       - uses: actions/checkout@v4
-      - name: List go modules
-        id: list-go-modules
+      - name: List plugins
+        id: list-plugins
         run: |
-          echo "modules=$(find . -name go.mod -exec dirname {} \; | sort | jq -R -s -c 'split("\n") | map(select(length > 0))')" >> $GITHUB_OUTPUT
+          echo "plugins=$(find . -name go.mod -exec dirname {} \; | sed 's|^./plugins/||' | sort | jq -R -s -c 'split("\n") | map(select(length > 0))')" >> $GITHUB_OUTPUT
 
   go:
     runs-on: ubuntu-latest-8-cores
-    needs: list-go-modules
+    needs: list-plugins
     strategy:
       fail-fast: false
       matrix:
-        module: ${{ fromJSON(needs.list-go-modules.outputs.modules) }}
+        plugin: ${{ fromJSON(needs.list-plugins.outputs.plugins) }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v4
@@ -40,12 +40,12 @@ jobs:
           go-version: ${{ env.GO_VERSION }}
           cache: true
       - name: Run unit tests
-        run: make test/go PLUGINS=${{ matrix.module }} # COVERAGE=true
+        run: make test/go PLUGINS=${{ matrix.plugin }} # COVERAGE=true
       # TODO: Add coverage reporting
       # - name: make flag
       #   id: make-flag
       #   run: |
-      #     echo "flags=$(echo ${{ matrix.module }} | tr '/' '-')" >> $GITHUB_OUTPUT
+      #     echo "flags=$(echo ${{ matrix.plugin }} | tr '/' '-')" >> $GITHUB_OUTPUT
       # - name: Upload coverage reports to Codecov
       #   uses: codecov/codecov-action@v3
       #   with:
