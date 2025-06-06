@@ -19,6 +19,9 @@ jobs:
     permissions:
       contents: write
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Create label
         run: |
           gh label create "plugin/${{ github.event.inputs.PLUGIN_DIR_NAME }}" --color "a7cfd4" --force
