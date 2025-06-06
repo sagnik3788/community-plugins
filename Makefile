@@ -3,15 +3,15 @@ sync: sync/plugins-list sync/codeowners
 
 .PHONY: sync/plugins-list
 sync/plugins-list:
-	sh hack/sync-plugins-list.sh
+	bash hack/sync-plugins-list.sh
 
 .PHONY: sync/codeowners
 sync/codeowners:
-	sh hack/sync-codeowners.sh
+	bash hack/sync-codeowners.sh
 
 .PHONY: init/plugin
 init/plugin:
-	sh hack/init-plugin.sh $(PLUGIN_DIR_NAME) $(CODEOWNERS)
+	bash hack/init-plugin.sh $(PLUGIN_DIR_NAME) $(CODEOWNERS)
 
 .PHONY: lint/go
 lint/go: FIX ?= false
@@ -71,4 +71,4 @@ test/go:
 
 .PHONY: precommit
 precommit: lint/go build/go test/go sync
-	sh hack/ensure-dco.sh
+	bash hack/ensure-dco.sh
