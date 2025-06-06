@@ -25,6 +25,8 @@ There are two ways to become a code owner:
 
 _What to do when a code owner becomes inactive?: TBD_
 
+**NOTE: CodeOwners does NOT have write access to the repository yet. Please ask maintainers when editing Issues/PRs including merging a PR. We're planning to add write access to CodeOwners in the future.**
+
 ## Issues
 
 ### Opening a new Issue
