@@ -2,9 +2,6 @@
 name: sync-autogen
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
     branches:
       - main
