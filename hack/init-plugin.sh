@@ -22,6 +22,14 @@ if [ -z "$PLUGIN_NAME" -o -z "$CODEOWNERS" ]; then
     exit 1
 fi
 
+# if Codeowner does not start by '@', then exit 1.
+for codeowner in $CODEOWNERS; do
+    if [[ "$codeowner" != @* ]]; then
+        echo "CodeOwner must start with '@'. Please check the codeowner: $codeowner"
+        exit 1
+    fi
+done
+
 # 1. Initialize the plugin directory.
 PLUGIN_DIR=plugins/$PLUGIN_NAME
 mkdir $PLUGIN_DIR
@@ -36,7 +44,7 @@ gsed -i "s|{{ISSUES_PLUGIN_NAME}}|${PLUGIN_NAME}|g" $readme
 # codeowners link
 codeowner_links=""
 for codeowner in $CODEOWNERS; do
-    codeowner_links="$codeowner_links [@$codeowner](https://github.com/$codeowner) "
+    codeowner_links="$codeowner_links [$codeowner](https://github.com/$codeowner) "
 done
 gsed -i "s|@{ACCOUNT}|$codeowner_links|" $readme
 
