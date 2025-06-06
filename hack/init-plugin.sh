@@ -54,6 +54,7 @@ cp hack/init-template/Makefile $PLUGIN_DIR/Makefile
 # 1-3. go.mod
 pushd $PLUGIN_DIR
 go mod init github.com/pipe-cd/community-plugins/$PLUGIN_DIR
+mv go.mod go.mod.tmp
 popd
 
 # 2. Update Issue templates, CODEOWNERS
