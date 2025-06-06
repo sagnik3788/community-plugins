@@ -54,6 +54,7 @@ jobs:
             This PR was automatically created by the "New Plugin" workflow.
             - Plugin: `${{ github.event.inputs.PLUGIN_DIR_NAME }}`
             - Codeowners: `${{ github.event.inputs.CODEOWNERS }}`
+            See [CONTRIBUTING.md](https://github.com/pipe-cd/community-plugins/blob/main/CONTRIBUTING.md#adding-a-new-plugin) for details.
           token: ${{ secrets.GITHUB_TOKEN }}
           signoff: true
           delete-branch: true

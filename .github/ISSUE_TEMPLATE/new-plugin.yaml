@@ -3,6 +3,10 @@ description: Suggest a new plugin
 title: "[New plugin] {{Short title of the plugin}}"
 labels: ["new-plugin"]
 body:
+  - type: markdown
+    attributes:
+      value: |
+        See [CONTRIBUTING.md](https://github.com/pipe-cd/community-plugins/blob/main/CONTRIBUTING.md#adding-a-new-plugin) for details of the process.
   # - type: textarea
   #   attributes:
   #     label: Type of the plugin (Deployment/Stages)
