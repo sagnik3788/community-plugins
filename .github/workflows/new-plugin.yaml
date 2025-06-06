@@ -72,6 +72,8 @@ jobs:
             related to: #${{ github.event.inputs.ISSUE_NUMBER }}
 
             See [CONTRIBUTING.md](https://github.com/pipe-cd/community-plugins/blob/main/CONTRIBUTING.md#adding-a-new-plugin) for details.
+
+            Please close and reopen this PR to trigger CI.
           token: ${{ secrets.GITHUB_TOKEN }}
           signoff: true
           delete-branch: true
