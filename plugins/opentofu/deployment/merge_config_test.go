@@ -26,39 +26,104 @@ import (
 func TestMergeConfig(t *testing.T) {
 	t.Parallel()
 
-	pluginCfg := &config.OpenTofuPluginConfig{
-		Version:           "1.6.0",
-		DefaultConfig:     "main.tf",
-		DefaultWorkingDir: ".",
-		DefaultEnv:        []string{"TF_VAR_default=value"},
-		DefaultInit:       true,
-	}
-
-	deployTarget := &sdk.DeployTarget[config.OpenTofuDeployTargetConfig]{
-		Name: "dev",
-		Config: config.OpenTofuDeployTargetConfig{
-			Config: config.DeployConfig{
-				Version:    "1.8.0",
+	tests := []struct {
+		name      string
+		pluginCfg *config.OpenTofuPluginConfig
+		dts       []*sdk.DeployTarget[config.OpenTofuDeployTargetConfig]
+		appSpec   *config.OpenTofuApplicationSpec
+		expected  *config.OpenTofuDeploymentInput
+	}{
+		{
+			name: "App spec takes highest precedence",
+			pluginCfg: &config.OpenTofuPluginConfig{
+				Version:           "1.6.0",
+				DefaultConfig:     "main.tf",
+				DefaultWorkingDir: ".",
+				DefaultEnv:        []string{"TF_VAR_default=value"},
+				DefaultInit:       true,
+			},
+			dts: []*sdk.DeployTarget[config.OpenTofuDeployTargetConfig]{
+				{
+					Name: "dev",
+					Config: config.OpenTofuDeployTargetConfig{
+						Version:    "1.8.0",
+						WorkingDir: "./dev",
+						Env:        []string{"TF_VAR_env=dev"},
+						Init:       false,
+					},
+				},
+			},
+			appSpec: &config.OpenTofuApplicationSpec{
+				Input: config.OpenTofuDeploymentInput{
+					Version: "1.9.1",
+					Config:  "custom.tf",
+					Init:    false,
+				},
+			},
+			expected: &config.OpenTofuDeploymentInput{
+				Version:    "1.9.1",
+				Config:     "custom.tf",
 				WorkingDir: "./dev",
-				Env:        []string{"TF_VAR_env=dev"},
+				Env:        []string{"TF_VAR_default=value", "TF_VAR_env=dev"},
 				Init:       false,
 			},
 		},
-	}
-
-	appSpec := &config.OpenTofuApplicationSpec{
-		Input: config.OpenTofuDeploymentInput{
-			Version: "1.9.1",
-			Config:  "custom.tf",
-			Init:    false,
+		{
+			name: "Deploy target config overrides plugin config",
+			pluginCfg: &config.OpenTofuPluginConfig{
+				Version:           "1.6.0",
+				DefaultConfig:     "main.tf",
+				DefaultWorkingDir: ".",
+				DefaultEnv:        []string{"TF_VAR_default=value"},
+				DefaultInit:       true,
+			},
+			dts: []*sdk.DeployTarget[config.OpenTofuDeployTargetConfig]{
+				{
+					Name: "dev",
+					Config: config.OpenTofuDeployTargetConfig{
+						Version:    "1.8.0",
+						WorkingDir: "./dev",
+						Env:        []string{"TF_VAR_env=prod"},
+						Init:       false,
+					},
+				},
+			},
+			expected: &config.OpenTofuDeploymentInput{
+				Version:    "1.8.0",
+				Config:     "main.tf",
+				WorkingDir: "./dev",
+				Env:        []string{"TF_VAR_default=value", "TF_VAR_env=prod"},
+				Init:       false,
+			},
 		},
+		{
+			name: "Plugin config defaults applied when no overrides",
+			pluginCfg: &config.OpenTofuPluginConfig{
+				Version:           "1.6.0",
+				DefaultConfig:     "main.tf",
+				DefaultWorkingDir: ".",
+				DefaultEnv:        []string{"TF_VAR_default=value"},
+				DefaultInit:       true,
+			},
+			expected: &config.OpenTofuDeploymentInput{
+				Version:    "1.6.0",
+				Config:     "main.tf",
+				WorkingDir: ".",
+				Env:        []string{"TF_VAR_default=value"},
+				Init:       true,
+			},
+		},
+		// TODO: Implement more test cases
 	}
 
-	merged := mergeConfig(pluginCfg, []*sdk.DeployTarget[config.OpenTofuDeployTargetConfig]{deployTarget}, appSpec)
-
-	assert.Equal(t, "1.9.1", merged.Version)                                        // App spec takes highest precedence
-	assert.Equal(t, "custom.tf", merged.Config)                                     // App spec takes highest precedence
-	assert.Equal(t, "./dev", merged.WorkingDir)                                     // Deploy target takes precedence over plugin
-	assert.Equal(t, false, merged.Init)                                             // Deploy target takes precedence over plugin
-	assert.Equal(t, []string{"TF_VAR_default=value", "TF_VAR_env=dev"}, merged.Env) // Both envs combined
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			merged := mergeConfig(tt.pluginCfg, tt.dts, tt.appSpec)
+			assert.Equal(t, tt.expected.Version, merged.Version)
+			assert.Equal(t, tt.expected.Config, merged.Config)
+			assert.Equal(t, tt.expected.WorkingDir, merged.WorkingDir)
+			assert.Equal(t, tt.expected.Env, merged.Env)
+			assert.Equal(t, tt.expected.Init, merged.Init)
+		})
+	}
 }

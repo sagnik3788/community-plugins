@@ -25,11 +25,6 @@ type OpenTofuPluginConfig struct {
 
 // OpenTofuDeployTargetConfig  represents the deployment scope configuration.
 type OpenTofuDeployTargetConfig struct {
-	Name   string       `json:"name"`
-	Config DeployConfig `json:"config"`
-}
-
-type DeployConfig struct {
 	Version    string   `json:"version"`
 	WorkingDir string   `json:"workingDir"`
 	Env        []string `json:"env"`
@@ -38,8 +33,8 @@ type DeployConfig struct {
 
 // OpenTofuApplicationSpec  represents the application scope configuration.
 type OpenTofuApplicationSpec struct {
-	Input     OpenTofuDeploymentInput    `json:"input"`
-	QuickSync OpenTofuDeployStageOptions `json:"quickSync"`
+	Input     OpenTofuDeploymentInput  `json:"input"`
+	QuickSync OpenTofuSyncStageOptions `json:"quickSync"`
 }
 
 func (s *OpenTofuApplicationSpec) Validate() error {
@@ -57,6 +52,6 @@ type OpenTofuDeploymentInput struct {
 }
 
 // OpenTofuDeployStageOptions holds options specific to the quick sync stage.
-type OpenTofuDeployStageOptions struct {
+type OpenTofuSyncStageOptions struct {
 	AutoApprove bool `json:"autoApprove"`
 }

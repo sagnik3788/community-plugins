@@ -33,8 +33,8 @@ func mergeConfig(pluginCfg *config.OpenTofuPluginConfig, dts []*sdk.DeployTarget
 	}
 
 	// Override with deploy target config if available
-	if len(dts) > 0 && dts[0].Name != "" {
-		deployCfg := dts[0].Config.Config
+	if len(dts) > 0 {
+		deployCfg := dts[0].Config
 		if deployCfg.Version != "" {
 			merged.Version = deployCfg.Version
 		}

@@ -28,11 +28,13 @@ type Plugin struct{}
 var _ sdk.DeploymentPlugin[config.OpenTofuPluginConfig, config.OpenTofuDeployTargetConfig, config.OpenTofuApplicationSpec] = (*Plugin)(nil)
 
 func (*Plugin) FetchDefinedStages() []string {
+	// TODO: Implement FetchDefinedStages logic
 	return []string{}
 }
 
 // BuildPipelineSyncStages builds the stages that will be executed by the plugin.
 func (p *Plugin) BuildPipelineSyncStages(ctx context.Context, cfg *config.OpenTofuPluginConfig, input *sdk.BuildPipelineSyncStagesInput) (*sdk.BuildPipelineSyncStagesResponse, error) {
+	// TODO: Implement BuildPipelineSyncStages logic
 	return &sdk.BuildPipelineSyncStagesResponse{
 		Stages: []sdk.PipelineStage{},
 	}, nil
@@ -40,6 +42,7 @@ func (p *Plugin) BuildPipelineSyncStages(ctx context.Context, cfg *config.OpenTo
 
 // ExecuteStage executes the given stage.
 func (p *Plugin) ExecuteStage(ctx context.Context, cfg *config.OpenTofuPluginConfig, dts []*sdk.DeployTarget[config.OpenTofuDeployTargetConfig], input *sdk.ExecuteStageInput[config.OpenTofuApplicationSpec]) (*sdk.ExecuteStageResponse, error) {
+	// TODO: Implement ExecuteStage logic
 	return &sdk.ExecuteStageResponse{
 		Status: sdk.StageStatusSuccess,
 	}, nil
@@ -47,20 +50,21 @@ func (p *Plugin) ExecuteStage(ctx context.Context, cfg *config.OpenTofuPluginCon
 
 // DetermineVersions determines the versions of artifacts for the deployment.
 func (p *Plugin) DetermineVersions(ctx context.Context, cfg *config.OpenTofuPluginConfig, input *sdk.DetermineVersionsInput[config.OpenTofuApplicationSpec]) (*sdk.DetermineVersionsResponse, error) {
+	// TODO: Implement DetermineVersions logic
 	return &sdk.DetermineVersionsResponse{
 		Versions: []sdk.ArtifactVersion{},
 	}, nil
 }
 
-// DetermineStrategy determines the sync strategy for the deployment.
+// DetermineStrategy determines the strategy for the deployment.
 func (p *Plugin) DetermineStrategy(ctx context.Context, cfg *config.OpenTofuPluginConfig, input *sdk.DetermineStrategyInput[config.OpenTofuApplicationSpec]) (*sdk.DetermineStrategyResponse, error) {
-	return &sdk.DetermineStrategyResponse{
-		Strategy: sdk.SyncStrategyQuickSync,
-	}, nil
+	// TODO: Implement DetermineStrategy logic
+	return nil, nil
 }
 
 // BuildQuickSyncStages builds the stages for quick sync.
 func (p *Plugin) BuildQuickSyncStages(ctx context.Context, cfg *config.OpenTofuPluginConfig, input *sdk.BuildQuickSyncStagesInput) (*sdk.BuildQuickSyncStagesResponse, error) {
+	// TODO: Implement BuildQuickSyncStages logic
 	return &sdk.BuildQuickSyncStagesResponse{
 		Stages: []sdk.QuickSyncStage{},
 	}, nil
