@@ -79,7 +79,7 @@ func TestMergeConfig(t *testing.T) {
 			},
 			dts: []*sdk.DeployTarget[config.OpenTofuDeployTargetConfig]{
 				{
-					Name: "dev",
+					Name: "prod",
 					Config: config.OpenTofuDeployTargetConfig{
 						Version:    "1.8.0",
 						WorkingDir: "./dev",

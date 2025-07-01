@@ -16,24 +16,35 @@ package config
 
 // OpenTofuPluginConfig represents the plugin scope configuration.
 type OpenTofuPluginConfig struct {
-	Version           string   `json:"version"`
-	DefaultConfig     string   `json:"defaultConfig"`
-	DefaultWorkingDir string   `json:"defaultWorkingDir"`
-	DefaultEnv        []string `json:"defaultEnv"`
-	DefaultInit       bool     `json:"defaultInit"`
+	// The version of the plugin configuration.
+	Version string `json:"version"`
+	// The default configuration file path.
+	DefaultConfig string `json:"defaultConfig"`
+	// The default working directory for the plugin.
+	DefaultWorkingDir string `json:"defaultWorkingDir"`
+	// The default environment variables for the plugin.
+	DefaultEnv []string `json:"defaultEnv"`
+	// Indicates whether to perform initialization by default.
+	DefaultInit bool `json:"defaultInit"`
 }
 
 // OpenTofuDeployTargetConfig  represents the deployment scope configuration.
 type OpenTofuDeployTargetConfig struct {
-	Version    string   `json:"version"`
-	WorkingDir string   `json:"workingDir"`
-	Env        []string `json:"env"`
-	Init       bool     `json:"init"`
+	// The version of the deployment target configuration.
+	Version string `json:"version"`
+	// The working directory for the deployment target.
+	WorkingDir string `json:"workingDir"`
+	// The environment variables for the deployment target.
+	Env []string `json:"env"`
+	// Indicates whether to perform initialization for the deployment target.
+	Init bool `json:"init"`
 }
 
 // OpenTofuApplicationSpec  represents the application scope configuration.
 type OpenTofuApplicationSpec struct {
-	Input     OpenTofuDeploymentInput  `json:"input"`
+	// The input configuration for OpenTofu deployment stages.
+	Input OpenTofuDeploymentInput `json:"input"`
+	// Options specific to the quick sync stage.
 	QuickSync OpenTofuSyncStageOptions `json:"quickSync"`
 }
 
@@ -44,14 +55,20 @@ func (s *OpenTofuApplicationSpec) Validate() error {
 
 // OpenTofuDeploymentInput is the input for OpenTofu stages.
 type OpenTofuDeploymentInput struct {
-	Version    string   `json:"version"`
-	Config     string   `json:"config"`
-	WorkingDir string   `json:"workingDir"`
-	Env        []string `json:"env"`
-	Init       bool     `json:"init"`
+	// The version of the deployment input.
+	Version string `json:"version"`
+	// The configuration file path for the deployment input.
+	Config string `json:"config"`
+	// The working directory for the deployment input.
+	WorkingDir string `json:"workingDir"`
+	// The environment variables for the deployment input.
+	Env []string `json:"env"`
+	// Indicates whether to perform initialization for the deployment input.
+	Init bool `json:"init"`
 }
 
 // OpenTofuDeployStageOptions holds options specific to the quick sync stage.
 type OpenTofuSyncStageOptions struct {
+	// Indicates whether to automatically approve changes during the quick sync stage.
 	AutoApprove bool `json:"autoApprove"`
 }
