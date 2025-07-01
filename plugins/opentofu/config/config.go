@@ -67,7 +67,7 @@ type OpenTofuDeploymentInput struct {
 	Init bool `json:"init"`
 }
 
-// OpenTofuDeployStageOptions holds options specific to the quick sync stage.
+// OpenTofuSyncStageOptions holds options specific to the quick sync stage.
 type OpenTofuSyncStageOptions struct {
 	// Indicates whether to automatically approve changes during the quick sync stage.
 	AutoApprove bool `json:"autoApprove"`
