@@ -20,31 +20,18 @@ import (
 	"github.com/pipe-cd/community-plugins/plugins/opentofu/config"
 )
 
-// mergeConfig merges configuration from plugin scope, deploy target, and application spec
-// following the precedence order: application spec > deploy target > plugin scope
-func mergeConfig(pluginCfg *config.OpenTofuPluginConfig, dts []*sdk.DeployTarget[config.OpenTofuDeployTargetConfig], appSpec *config.OpenTofuApplicationSpec) *config.OpenTofuDeploymentInput {
-	// Start with plugin scope defaults
-	merged := &config.OpenTofuDeploymentInput{
-		Version:    pluginCfg.Version,
-		Config:     pluginCfg.DefaultConfig,
-		WorkingDir: pluginCfg.DefaultWorkingDir,
-		Env:        append([]string{}, pluginCfg.DefaultEnv...),
-		Init:       pluginCfg.DefaultInit,
-	}
+// mergeConfig merges configuration from deploy target and application spec
+// following the precedence order: application spec > deploy target
+func mergeConfig(dts []*sdk.DeployTarget[config.OpenTofuDeployTargetConfig], appSpec *config.OpenTofuApplicationSpec) *config.OpenTofuDeploymentInput {
+	// Start with deploy target defaults
+	merged := &config.OpenTofuDeploymentInput{}
 
-	// Override with deploy target config if available
 	if len(dts) > 0 {
 		deployCfg := dts[0].Config
-		if deployCfg.Version != "" {
-			merged.Version = deployCfg.Version
-		}
-		if deployCfg.WorkingDir != "" {
-			merged.WorkingDir = deployCfg.WorkingDir
-		}
-		if len(deployCfg.Env) > 0 {
-			merged.Env = append(merged.Env, deployCfg.Env...)
-		}
-		// Init from deploy target takes precedence over plugin default
+		merged.Version = deployCfg.Version
+		merged.Config = deployCfg.Config
+		merged.WorkingDir = deployCfg.WorkingDir
+		merged.Env = append([]string{}, deployCfg.Env...)
 		merged.Init = deployCfg.Init
 	}
 
@@ -63,7 +50,7 @@ func mergeConfig(pluginCfg *config.OpenTofuPluginConfig, dts []*sdk.DeployTarget
 		if len(appInput.Env) > 0 {
 			merged.Env = append(merged.Env, appInput.Env...)
 		}
-		// Init from application spec takes highest precedence
+		// Init from application spec takes precedence
 		merged.Init = appInput.Init
 	}
 

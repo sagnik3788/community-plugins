@@ -27,26 +27,19 @@ func TestMergeConfig(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
-		name      string
-		pluginCfg *config.OpenTofuPluginConfig
-		dts       []*sdk.DeployTarget[config.OpenTofuDeployTargetConfig]
-		appSpec   *config.OpenTofuApplicationSpec
-		expected  *config.OpenTofuDeploymentInput
+		name     string
+		dts      []*sdk.DeployTarget[config.OpenTofuDeployTargetConfig]
+		appSpec  *config.OpenTofuApplicationSpec
+		expected *config.OpenTofuDeploymentInput
 	}{
 		{
 			name: "App spec takes highest precedence",
-			pluginCfg: &config.OpenTofuPluginConfig{
-				Version:           "1.6.0",
-				DefaultConfig:     "main.tf",
-				DefaultWorkingDir: ".",
-				DefaultEnv:        []string{"TF_VAR_default=value"},
-				DefaultInit:       true,
-			},
 			dts: []*sdk.DeployTarget[config.OpenTofuDeployTargetConfig]{
 				{
 					Name: "dev",
 					Config: config.OpenTofuDeployTargetConfig{
 						Version:    "1.8.0",
+						Config:     "main.tf",
 						WorkingDir: "./dev",
 						Env:        []string{"TF_VAR_env=dev"},
 						Init:       false,
@@ -57,73 +50,104 @@ func TestMergeConfig(t *testing.T) {
 				Input: config.OpenTofuDeploymentInput{
 					Version: "1.9.1",
 					Config:  "custom.tf",
-					Init:    false,
+					Init:    true,
 				},
 			},
 			expected: &config.OpenTofuDeploymentInput{
 				Version:    "1.9.1",
 				Config:     "custom.tf",
 				WorkingDir: "./dev",
-				Env:        []string{"TF_VAR_default=value", "TF_VAR_env=dev"},
-				Init:       false,
+				Env:        []string{"TF_VAR_env=dev"},
+				Init:       true,
 			},
 		},
 		{
-			name: "Deploy target config overrides plugin config",
-			pluginCfg: &config.OpenTofuPluginConfig{
-				Version:           "1.6.0",
-				DefaultConfig:     "main.tf",
-				DefaultWorkingDir: ".",
-				DefaultEnv:        []string{"TF_VAR_default=value"},
-				DefaultInit:       true,
-			},
+			name: "Deploy target config provides defaults",
 			dts: []*sdk.DeployTarget[config.OpenTofuDeployTargetConfig]{
 				{
 					Name: "prod",
 					Config: config.OpenTofuDeployTargetConfig{
 						Version:    "1.8.0",
-						WorkingDir: "./dev",
+						Config:     "main.tf",
+						WorkingDir: "./prod",
 						Env:        []string{"TF_VAR_env=prod"},
-						Init:       false,
+						Init:       true,
 					},
 				},
 			},
 			expected: &config.OpenTofuDeploymentInput{
 				Version:    "1.8.0",
 				Config:     "main.tf",
-				WorkingDir: "./dev",
-				Env:        []string{"TF_VAR_default=value", "TF_VAR_env=prod"},
+				WorkingDir: "./prod",
+				Env:        []string{"TF_VAR_env=prod"},
+				Init:       true,
+			},
+		},
+		{
+			name: "Empty deploy targets returns zero values",
+			dts:  []*sdk.DeployTarget[config.OpenTofuDeployTargetConfig]{},
+			expected: &config.OpenTofuDeploymentInput{
+				Version:    "",
+				Config:     "",
+				WorkingDir: "",
+				Env:        nil,
 				Init:       false,
 			},
 		},
 		{
-			name: "Plugin config defaults applied when no overrides",
-			pluginCfg: &config.OpenTofuPluginConfig{
-				Version:           "1.6.0",
-				DefaultConfig:     "main.tf",
-				DefaultWorkingDir: ".",
-				DefaultEnv:        []string{"TF_VAR_default=value"},
-				DefaultInit:       true,
+			name: "Nil app spec uses only deploy target config",
+			dts: []*sdk.DeployTarget[config.OpenTofuDeployTargetConfig]{
+				{
+					Name: "staging",
+					Config: config.OpenTofuDeployTargetConfig{
+						Version:    "1.7.0",
+						Config:     "staging.tf",
+						WorkingDir: "./staging",
+						Env:        []string{"TF_VAR_env=staging"},
+						Init:       false,
+					},
+				},
 			},
+			appSpec: nil,
 			expected: &config.OpenTofuDeploymentInput{
-				Version:    "1.6.0",
-				Config:     "main.tf",
-				WorkingDir: ".",
-				Env:        []string{"TF_VAR_default=value"},
-				Init:       true,
+				Version:    "1.7.0",
+				Config:     "staging.tf",
+				WorkingDir: "./staging",
+				Env:        []string{"TF_VAR_env=staging"},
+				Init:       false,
 			},
 		},
-		// TODO: Implement more test cases
+		{
+			name: "App spec env appends to deploy target env",
+			dts: []*sdk.DeployTarget[config.OpenTofuDeployTargetConfig]{
+				{
+					Name: "dev",
+					Config: config.OpenTofuDeployTargetConfig{
+						Version: "1.8.0",
+						Config:  "main.tf",
+						Env:     []string{"TF_VAR_env=dev"},
+					},
+				},
+			},
+			appSpec: &config.OpenTofuApplicationSpec{
+				Input: config.OpenTofuDeploymentInput{
+					Env: []string{"TF_VAR_app=value"},
+				},
+			},
+			expected: &config.OpenTofuDeploymentInput{
+				Version: "1.8.0",
+				Config:  "main.tf",
+				Env:     []string{"TF_VAR_env=dev", "TF_VAR_app=value"},
+				Init:    false,
+			},
+		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			merged := mergeConfig(tt.pluginCfg, tt.dts, tt.appSpec)
-			assert.Equal(t, tt.expected.Version, merged.Version)
-			assert.Equal(t, tt.expected.Config, merged.Config)
-			assert.Equal(t, tt.expected.WorkingDir, merged.WorkingDir)
-			assert.Equal(t, tt.expected.Env, merged.Env)
-			assert.Equal(t, tt.expected.Init, merged.Init)
+			t.Parallel()
+			merged := mergeConfig(tt.dts, tt.appSpec)
+			assert.Equal(t, *tt.expected, *merged)
 		})
 	}
 }
