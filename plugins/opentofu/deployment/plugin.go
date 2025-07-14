@@ -16,10 +16,20 @@ package deployment
 
 import (
 	"context"
+	"slices"
 
 	sdk "github.com/pipe-cd/piped-plugin-sdk-go"
 
 	"github.com/pipe-cd/community-plugins/plugins/opentofu/config"
+)
+
+const (
+	// OPENTOFU_PLAN stage executes `tofu plan`.
+	stagePlan = "OPENTOFU_PLAN"
+	// OPENTOFU_APPLY stage executes `tofu apply`.
+	stageApply = "OPENTOFU_APPLY"
+	// OPENTOFU_ROLLBACK stage rollbacks by executing 'tofu apply' for the previous state.
+	stageRollback = "OPENTOFU_ROLLBACK"
 )
 
 // Plugin implements sdk.DeploymentPlugin for OpenTofu.
@@ -28,19 +38,41 @@ type Plugin struct{}
 var _ sdk.DeploymentPlugin[config.Config, config.DeployTargetConfig, config.ApplicationConfigSpec] = (*Plugin)(nil)
 
 func (*Plugin) FetchDefinedStages() []string {
-	// TODO: Implement FetchDefinedStages logic
-	return []string{}
+	return []string{
+		stagePlan,
+		stageApply,
+		stageRollback,
+	}
 }
 
 // BuildPipelineSyncStages builds the stages that will be executed by the plugin.
-func (p *Plugin) BuildPipelineSyncStages(
-	ctx context.Context,
-	cfg *config.Config,
-	input *sdk.BuildPipelineSyncStagesInput,
-) (*sdk.BuildPipelineSyncStagesResponse, error) {
-	// TODO: Implement BuildPipelineSyncStages logic
+func (p *Plugin) BuildPipelineSyncStages(ctx context.Context, cfg *config.Config, input *sdk.BuildPipelineSyncStagesInput) (*sdk.BuildPipelineSyncStagesResponse, error) {
+	reqStages := input.Request.Stages
+	out := make([]sdk.PipelineStage, 0, len(reqStages))
+
+	for _, s := range reqStages {
+		out = append(out, sdk.PipelineStage{
+			Index:              s.Index,
+			Name:               s.Name,
+			Rollback:           false,
+			Metadata:           make(map[string]string),
+			AvailableOperation: sdk.ManualOperationNone,
+		})
+	}
+	if input.Request.Rollback {
+		// minIndex from reqStages to ensure the rollback stage executes first.
+		minIndex := slices.MinFunc(reqStages, func(a, b sdk.StageConfig) int { return a.Index - b.Index }).Index
+		out = append(out, sdk.PipelineStage{
+			Name:               stageRollback,
+			Index:              minIndex,
+			Rollback:           true,
+			Metadata:           make(map[string]string),
+			AvailableOperation: sdk.ManualOperationNone,
+		})
+	}
+
 	return &sdk.BuildPipelineSyncStagesResponse{
-		Stages: []sdk.PipelineStage{},
+		Stages: out,
 	}, nil
 }
 
@@ -80,13 +112,26 @@ func (p *Plugin) DetermineStrategy(
 }
 
 // BuildQuickSyncStages builds the stages for quick sync.
-func (p *Plugin) BuildQuickSyncStages(
-	ctx context.Context,
-	cfg *config.Config,
-	input *sdk.BuildQuickSyncStagesInput,
-) (*sdk.BuildQuickSyncStagesResponse, error) {
-	// TODO: Implement BuildQuickSyncStages logic
+func (p *Plugin) BuildQuickSyncStages(ctx context.Context, cfg *config.Config, input *sdk.BuildQuickSyncStagesInput) (*sdk.BuildQuickSyncStagesResponse, error) {
+	stages := make([]sdk.QuickSyncStage, 0, 2)
+	stages = append(stages, sdk.QuickSyncStage{
+		Name:               stageApply,
+		Description:        "Sync by applying any detected changes",
+		Rollback:           false,
+		Metadata:           map[string]string{},
+		AvailableOperation: sdk.ManualOperationNone,
+	})
+
+	if input.Request.Rollback {
+		stages = append(stages, sdk.QuickSyncStage{
+			Name:               stageRollback,
+			Description:        "Rollback by applying the previous OpenTofu files",
+			Rollback:           true,
+			Metadata:           map[string]string{},
+			AvailableOperation: sdk.ManualOperationNone,
+		})
+	}
 	return &sdk.BuildQuickSyncStagesResponse{
-		Stages: []sdk.QuickSyncStage{},
+		Stages: stages,
 	}, nil
 }
