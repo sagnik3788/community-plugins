@@ -2,6 +2,7 @@ package deployment
 
 import (
 	"context"
+	"github.com/pipe-cd/community-plugins/plugins/sqldef/provider"
 	"slices"
 
 	sdk "github.com/pipe-cd/piped-plugin-sdk-go"
@@ -10,15 +11,18 @@ import (
 )
 
 const (
-	// run sqldef with --dry-run
-	sqldefStagePlan  string = "SQLDEF_PLAN"
+	// show the SQL plan about to execute without applying changes to target DB
+	sqldefStagePlan string = "SQLDEF_PLAN"
+	// apply changes to target DB
 	sqldefStageApply string = "SQLDEF_APPLY"
-	// by running with previous DB schema dump
+	// revert changes to target DB
 	sqldefStageRollback string = "SQLDEF_ROLLBACK"
 )
 
-// Plugin implements sdk.DeploymentPlugin for OpenTofu.
-type Plugin struct{}
+// Plugin implements sdk.DeploymentPlugin for Sqldef.
+type Plugin struct {
+	Sqldef provider.SqldefProvider
+}
 
 var _ sdk.DeploymentPlugin[config.Config, config.DeployTargetConfig, config.ApplicationConfigSpec] = (*Plugin)(nil)
 
@@ -73,10 +77,15 @@ func (p *Plugin) ExecuteStage(
 	dts []*sdk.DeployTarget[config.DeployTargetConfig],
 	input *sdk.ExecuteStageInput[config.ApplicationConfigSpec],
 ) (*sdk.ExecuteStageResponse, error) {
-	// TODO: Implement ExecuteStage logic
-	return &sdk.ExecuteStageResponse{
-		Status: sdk.StageStatusSuccess,
-	}, nil
+
+	switch input.Request.StageName {
+	case sqldefStagePlan:
+		return &sdk.ExecuteStageResponse{
+			Status: p.executePlanStage(ctx, dts, input),
+		}, nil
+	default:
+		panic("unimplemented stage")
+	}
 }
 
 // DetermineVersions determines the versions of artifacts for the deployment.
